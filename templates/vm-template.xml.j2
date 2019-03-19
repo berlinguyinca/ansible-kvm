@@ -18,10 +18,10 @@
         <listen type='address'/>
     </graphics>
 {% for hd in item.disks %}
-{%  if hd.cdrom %}
-    <dist type='file' device='cdrom'>
+{%  if hd.cdrom is defined and hd.cdrom == true %}
+    <disk type='file' device='cdrom'>
      <driver name='{{hd.disk_driver}}' type='raw'/>
-        <source file='{{image}}'/>
+        <source file='{{hd.image}}'/>
         <target dev='hdc' bus='ide'/>
         <readonly/>
         <address type='drive' controller='0' bus='1' unit='0'/>

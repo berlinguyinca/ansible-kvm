@@ -28,7 +28,7 @@
   with_subelements:
     - "{{ kvm_vms }}"
     - disks
-  when: item[0]['host'] is not defined
+  when: item[0]['host'] is not defined and item[1]['cdrom'] is not defined
 
 - name: config_vms | Creating VM Disk(s)
   qemu_img:
