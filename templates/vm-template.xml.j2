@@ -14,10 +14,20 @@
     <apic/>
   </features>
   <devices>
-{% if graphics is defined and graphics == true %}
-    <graphics type='spice' autoport='yes'/>
-{% endif %}
+    <graphics type='spice' autoport='yes'>
+        <listen type='address'/>
+    </graphics>
 {% for hd in item.disks %}
+{%  if hd.cdrom %}
+    <dist type='file' device='cdrom'>
+     <driver name='{{hd.disk_driver}}' type='raw'/>
+        <source file='{{image}}'/>
+        <target dev='hdc' bus='ide'/>
+        <readonly/>
+        <address type='drive' controller='0' bus='1' unit='0'/>
+    </disk>
+{%  else %}
+
     <disk type='file' device='disk'>
       <driver name='qemu' type='{{ kvm_images_format_type }}' cache='{{ kvm_images_cache_mode }}'/>
       <source file='{{ kvm_images_path }}/{{ hd.name }}.{{ kvm_images_format_type }}'/>
@@ -27,6 +37,7 @@
       <target dev='sd{{ "abcdefghijklmnopqrstuvwxyz"[loop.index0] }}' bus='{{ hd.disk_driver }}'/>
 {%   endif %}
     </disk>
+{% endif %}
 {% endfor %}
 {% for int in item.network_interfaces %}
     <interface type='{{ int.type }}'>
